@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暗号通貨価格モニター</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .crypto-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #fafafa;
+        }
+        .crypto-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 20px;
+            margin: 5px 0;
+        }
+        .usd {
+            color: #27ae60;
+        }
+        .jpy {
+            color: #3498db;
+        }
+        .updated {
+            text-align: center;
+            color: #7f8c8d;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .refresh-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 30px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .refresh-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 暗号通貨価格モニター</h1>
+        
+        <div id="prices">
+            <p style="text-align: center;">読み込み中...</p>
+        </div>
+        
+        <button class="refresh-btn" onclick="loadPrices()">🔄 更新</button>
+        
+        <div class="updated" id="updated"></div>
+    </div>
+
+    <script>
+        function loadPrices() {
+            fetch('/prices')
+                .then(response => response.json())
+                .then(data => {
+                    const pricesDiv = document.getElementById('prices');
+                    const updatedDiv = document.getElementById('updated');
+                    
+                    let html = '';
+                    
+                    // ビットコイン
+                    html += `
+                        <div class="crypto-card">
+                            <div class="crypto-name">🪙 ${data.data.bitcoin.name}</div>
+                            <div class="price usd">$${data.data.bitcoin.usd.toLocaleString()}</div>
+                            <div class="price jpy">¥${data.data.bitcoin.jpy.toLocaleString()}</div>
+                        </div>
+                    `;
+                    
+                    // イーサリアム
+                    html += `
+                        <div class="crypto-card">
+                            <div class="crypto-name">💎 ${data.data.ethereum.name}</div>
+                            <div class="price usd">$${data.data.ethereum.usd.toLocaleString()}</div>
+                            <div class="price jpy">¥${data.data.ethereum.jpy.toLocaleString()}</div>
+                        </div>
+                    `;
+                    
+                    pricesDiv.innerHTML = html;
+                    updatedDiv.innerHTML = `最終更新: ${data.updated_at}`;
+                });
+        }
+        
+        // ページ読み込み時に価格を取得
+        loadPrices();
+        
+        // 30秒ごとに自動更新
+        setInterval(loadPrices, 30000);
+    </script>
+</body>
+</html>
