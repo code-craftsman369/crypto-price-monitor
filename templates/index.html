@@ -87,35 +87,42 @@
                 .then(data => {
                     const pricesDiv = document.getElementById('prices');
                     const updatedDiv = document.getElementById('updated');
-                    
+                
                     let html = '';
-                    
-                    // ビットコイン
-                    html += `
-                        <div class="crypto-card">
-                            <div class="crypto-name">🪙 ${data.data.bitcoin.name}</div>
-                            <div class="price usd">$${data.data.bitcoin.usd.toLocaleString()}</div>
-                            <div class="price jpy">¥${data.data.bitcoin.jpy.toLocaleString()}</div>
-                        </div>
-                    `;
-                    
-                    // イーサリアム
-                    html += `
-                        <div class="crypto-card">
-                            <div class="crypto-name">💎 ${data.data.ethereum.name}</div>
-                            <div class="price usd">$${data.data.ethereum.usd.toLocaleString()}</div>
-                            <div class="price jpy">¥${data.data.ethereum.jpy.toLocaleString()}</div>
-                        </div>
-                    `;
-                    
+                
+                    // すべての通貨をループで表示
+                    const cryptoEmojis = {
+                        'bitcoin': '🪙',
+                        'ethereum': '💎',
+                        'ripple': '💧',
+                        'solana': '☀️',
+                        'dogecoin': '🐕',
+                        'tether': '💵',
+                        'sui': '🌊',
+                        'mantle': '🔷',
+                        'hyperliquid': '⚡',
+                        'polkadot': '⚪'
+                    };
+                
+                    for (const [cryptoId, cryptoData] of Object.entries(data.data)) {
+                        const emoji = cryptoEmojis[cryptoId] || '💰';
+                        html += `
+                            <div class="crypto-card">
+                                <div class="crypto-name">${emoji} ${cryptoData.name}</div>
+                                <div class="price usd">$${cryptoData.usd.toLocaleString()}</div>
+                                <div class="price jpy">¥${cryptoData.jpy.toLocaleString()}</div>
+                            </div>
+                        `;
+                    }
+                
                     pricesDiv.innerHTML = html;
                     updatedDiv.innerHTML = `最終更新: ${data.updated_at}`;
                 });
         }
-        
+    
         // ページ読み込み時に価格を取得
         loadPrices();
-        
+    
         // 30秒ごとに自動更新
         setInterval(loadPrices, 30000);
     </script>
