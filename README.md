@@ -1,6 +1,8 @@
 # Crypto Price Monitor
 
-CoinGecko APIを使った暗号通貨価格監視ツール
+![Crypto Price Monitor Screenshot](images/screenshot.png)
+
+CoinGecko APIを使った暗号通貨価格モニタリングシステム
 
 ## 🌟 機能
 
